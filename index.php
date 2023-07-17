@@ -12,13 +12,3 @@ $serverClient->createPort(9201);
 $serverClient->createPort(9202);
 
 $serverClient->startServer();
-
-//var_dump('asadasds');
-
-//$serverClient->createPort(9200);
-//$serverClient->createRoom();
-//$serverClient->createRoom();
-
-//$serverClient->startServer();
-//
-//var_dump('dasdasd');
