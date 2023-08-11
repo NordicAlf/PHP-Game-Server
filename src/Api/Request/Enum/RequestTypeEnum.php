@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace ForestServer\Api\Request\Enum;
 
-enum GameTypeEnum: string
+enum RequestTypeEnum: string
 {
-    case Create = 'Create';
-    case Join = 'Join';
+    case Room = 'Room';
+    case Game = 'Game';
 }
