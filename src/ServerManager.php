@@ -4,10 +4,14 @@ declare(strict_types=1);
 namespace ForestServer;
 
 use Closure;
-use ForestServer\Api\Request\RequestInterface;
+use ForestServer\Api\Request\Factory\RequestFactory;
 use ForestServer\DTO\Settings;
 use ForestServer\Entity\User;
-use Swoole\Http\Request;
+use ForestServer\Middleware\LoggingMiddleware;
+use ForestServer\Middleware\MiddlewarePipeline;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Swoole\Http\Request as SwooleRequest;
 use Swoole\Server\Port;
 use Swoole\WebSocket\Frame;
 use Swoole\WebSocket\Server;
@@ -16,6 +20,7 @@ class ServerManager
 {
     protected Server $server;
     protected Settings $settings;
+    protected MiddlewarePipeline $middleware;
 
     /* @var Port[] $users */
     protected array $ports = [];
@@ -29,9 +34,12 @@ class ServerManager
     public function __construct(
         private readonly string $host,
         private readonly int $port,
-        private readonly RequestInterface $request,
         ?Settings $settings = null,
     ) {
+        $this->middleware = new MiddlewarePipeline([
+            new LoggingMiddleware(new Logger('main', [new StreamHandler('php://stdout')]))
+        ]);
+
         $this->server = new Server($this->host, $this->port);
 
         if ($settings) {
@@ -74,7 +82,7 @@ class ServerManager
 
     public function onOpen(int $port): Closure
     {
-        return function (Server $server, Request $request) use ($port) {
+        return function (Server $server, SwooleRequest $request) use ($port) {
             $this->users[$request->fd] = (new User())->setFd($request->fd);
 
             echo "Client $request->fd :Connect to port: $port\n";
@@ -84,11 +92,9 @@ class ServerManager
     public function onMessage(int $port): Closure
     {
         return function (Server $server, Frame $frame) use ($port) {
-            $request = $this->request->create($frame->data);
-            echo "Client $frame->fd :Request to port: $port\n";
+            $request = RequestFactory::createRequest($frame);
 
-            var_dump('request');
-            var_dump($request);
+            $this->middleware->handle($request);
 
             if ($server->isEstablished($frame->fd)) {
                 foreach ($this->users as $user) {
