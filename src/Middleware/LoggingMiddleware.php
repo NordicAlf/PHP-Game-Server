@@ -12,15 +12,14 @@ class LoggingMiddleware implements MiddlewareInterface
         private readonly LoggerInterface $logger
     ) {}
 
-    public function handle(RequestInterface $request, callable $next): ?callable
+    public function handle(RequestInterface $request): ?RequestInterface
     {
         $this->logger->info($request->getType()->value, [
             'request' => [
-//                'fd' => $frame->fd,
                 'data' => $request->toArray()
             ]
         ]);
 
-        return $next($request);
+        return $request;
     }
 }

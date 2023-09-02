@@ -8,5 +8,6 @@ use ForestServer\Api\Request\Enum\RequestTypeEnum;
 interface RequestInterface
 {
     public function getType(): RequestTypeEnum;
+    public function getUserFd(): string;
     public function toArray(): array;
 }

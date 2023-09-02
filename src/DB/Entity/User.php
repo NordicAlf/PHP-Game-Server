@@ -1,11 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace ForestServer\Entity;
+namespace ForestServer\DB\Entity;
 
-class User extends AbstractEntity
+use ForestServer\Attributes\UseParam;
+
+class User extends AbstractEntity implements EntityInterface
 {
-    private int $fd;
+    #[UseParam]
+    protected int $fd;
 
     public function getFd(): int
     {

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace ForestServer\Tests\Unit\Service;
 
-use ForestServer\Service\StringService;
+use ForestServer\Service\Converter\StringService;
 use PHPUnit\Framework\TestCase;
 
 class StringServiceTest extends TestCase
