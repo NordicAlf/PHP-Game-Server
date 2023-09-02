@@ -9,13 +9,13 @@ final class MiddlewarePipeline
 {
     /** @param list<MiddlewareInterface> $middleWares */
     public function __construct(
-        private array $middleWares
+        private readonly array $middleWares
     ) {}
 
-    public function handle(RequestInterface $request): ?RequestInterface
+    public function handle(RequestInterface $request): void
     {
-        $middleware = array_shift($this->middleWares);
-
-        return $middleware?->handle($request, [$this, 'handle']);
+        foreach ($this->middleWares as $middleware) {
+            $request = $middleware->handle($request);
+        }
     }
 }

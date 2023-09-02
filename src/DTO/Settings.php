@@ -3,8 +3,12 @@ declare(strict_types=1);
 
 namespace ForestServer\DTO;
 
-class Settings extends AbstractDTO implements DTOInterface
+use ForestServer\Service\Trait\ObjectTrait;
+
+class Settings implements DTOInterface
 {
+    use ObjectTrait;
+
     protected int $workerNum;
     protected int $taskWorkerNum;
     protected int $hookFlags;

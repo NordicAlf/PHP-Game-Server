@@ -5,6 +5,6 @@ namespace ForestServer\Api\Request\Enum;
 
 enum RoomActionEnum: string
 {
-    case Create = 'Create';
-    case Join = 'Join';
+    case Create = 'create';
+    case Join = 'join';
 }

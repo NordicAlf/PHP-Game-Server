@@ -6,10 +6,12 @@ namespace ForestServer\Api\Request;
 use ForestServer\Api\Request\Enum\RequestTypeEnum;
 use ForestServer\Api\Request\Interface\RequestInterface;
 use ForestServer\Attributes\UseParam;
-use ForestServer\DTO\AbstractDTO;
+use ForestServer\Service\Trait\ObjectTrait;
 
-class RoomRequest extends AbstractDTO implements RequestInterface
+class RoomRequest extends AbstractRequest implements RequestInterface
 {
+    use ObjectTrait;
+
     #[UseParam]
     protected string $roomAction;
 

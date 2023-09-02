@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace ForestServer\DTO;
+namespace ForestServer\Service\Trait;
 
 use ForestServer\Service\Converter\StringService;
 
-abstract class AbstractDTO
+trait ObjectTrait
 {
     public function toArray(): array
     {
