@@ -4,14 +4,22 @@ declare(strict_types=1);
 namespace ForestServer;
 
 use Closure;
+use Exception;
+use ForestServer\Api\Request\Enum\ResponseStatusEnum;
+use ForestServer\Api\Request\Enum\ResponseTypeEnum;
 use ForestServer\Api\Request\Enum\RoomActionEnum;
 use ForestServer\Api\Request\Factory\RequestFactory;
+use ForestServer\DB\Entity\Room;
+use ForestServer\DB\Repository\ItemRepository;
+use ForestServer\DB\Repository\RoomRepository;
 use ForestServer\DTO\Settings;
+use ForestServer\Game\GameManager;
 use ForestServer\Middleware\AuthMiddleware;
 use ForestServer\Middleware\LoggingMiddleware;
 use ForestServer\Middleware\MiddlewarePipeline;
 use ForestServer\Service\Auth\AuthService;
 use ForestServer\Service\Container\Container;
+use ForestServer\Service\Game\Generator\VectorGenerator;
 use ForestServer\Service\Room\RoomService;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -27,6 +35,8 @@ class ServerManager
     protected MiddlewarePipeline $middleware;
     protected RoomService $roomManager;
     protected static Container $container;
+    protected RoomRepository $roomRepository;
+    protected GameManager $gameManager;
 
     /* @var Port[] $users */
     protected array $ports = [];
@@ -36,7 +46,9 @@ class ServerManager
         private readonly int $port,
         ?Settings $settings = null,
     ) {
+        $this->roomRepository = new RoomRepository();
         $this->roomManager = new RoomService();
+        $this->gameManager = new GameManager(new VectorGenerator(), new ItemRepository(), $this->roomRepository);
 //        static::$container = new Container();
 
 //        static::$container->set(RoomService::class, function (Container $c) {
@@ -98,26 +110,54 @@ class ServerManager
     public function onMessage(int $port): Closure
     {
         return function (Server $server, Frame $frame) use ($port) {
-            $request = RequestFactory::createRequest($frame);
+            try {
+                $request = RequestFactory::createRequest($frame);
 
-            $this->middleware->handle($request);
+                $this->middleware->handle($request);
 
-            if ($request->getAction() === RoomActionEnum::Create->value) {
-                $this->roomManager->create($request);
-            }
+                if ($request->getAction() === RoomActionEnum::Create->value) {
+                    $room = $this->roomManager->create($request);
 
-            if ($request->getAction() === RoomActionEnum::Join->value) {
-                $this->roomManager->join($request);
+                    $room = $this->gameManager->createCakePositions($room);
+
+                    $server->push($frame->fd, json_encode([
+                        'status' => ResponseStatusEnum::Success->value,
+                        'type' => ResponseTypeEnum::Positions->value,
+                        'data' => [
+                            'platePositions' => []
+                        ]
+                    ]));
+                }
+
+                if ($request->getAction() === RoomActionEnum::Join->value) {
+                    //создать позицую игрока для нового юзера
+
+                    $this->roomManager->join($request);
+                }
+
+//                var_dump($this->roomRepository->getAll());
+            } catch (Exception $exception) {
+                var_dump($exception->getMessage());
+
+                $server->push($frame->fd, json_encode([
+                    'status' => ResponseStatusEnum::Error->value,
+                    'data' => $exception->getMessage()
+                ]));
             }
 
             if ($server->isEstablished($frame->fd)) {
-                foreach ($this->users as $user) {
-                    $response = [
-                        'user' => $frame->fd,
-                        'message' => $frame->data
-                    ];
+                /** @var Room $room */
+                foreach ($this->roomRepository->getAll() as $room) {
+                    dump(json_encode($room->getUsers()[0]));
 
-                    $server->push($user->getFd(), json_encode($response));
+                    $server->push($frame->fd, json_encode([
+                        'status' => ResponseStatusEnum::Success->value,
+                        'type' => ResponseTypeEnum::DataChannel->value,
+                        'data' => [
+                            'cakes' => $room->getItems(),
+                            'users' => $room->getUsers()
+                        ]
+                    ]));
                 }
             }
         };

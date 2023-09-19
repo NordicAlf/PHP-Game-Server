@@ -50,16 +50,19 @@ class RoomRepository extends AbstractRepository implements RepositoryInterface
     /** @var Room $data */
     public function save(EntityInterface $data): void
     {
-        $usersIds = [];
-
         foreach ($data->getUsers() as $user) {
-            $usersIds[] = $user->getId();
+            $userIds[] = $user->getId();
+        }
+
+        foreach ($data->getItems() as $item) {
+            $itemIds[] = $item->getId();
         }
 
         RoomStorage::getTable()->set($data->getId(), [
             'id' => $data->getId(),
             'password' => $data->getPassword(),
-            'users' => json_encode($usersIds)
+            'users' => json_encode($userIds ?? []),
+            'items' => json_encode($itemIds ?? [])
         ]);
     }
 }

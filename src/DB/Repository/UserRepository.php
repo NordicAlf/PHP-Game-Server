@@ -42,9 +42,11 @@ class UserRepository extends AbstractRepository implements RepositoryInterface
     public function getAll(): array
     {
         foreach (UserStorage::getTable() as $userRow) {
-            $users[] = (new User())
-                ->setId($userRow['id'])
-                ->setFd($userRow['fd']);
+            $users[] = Transform::transformArrayToObject($userRow, User::class);
+//            $users[] = (new User())
+//                ->setId($userRow['id'])
+//                ->setFd($userRow['fd'])
+//                ->setPosition($userRow['position']);
         }
 
         return $users ?? [];
@@ -55,7 +57,8 @@ class UserRepository extends AbstractRepository implements RepositoryInterface
     {
         UserStorage::getTable()->set($data->getId(), [
             'id' => $data->getId(),
-            'fd' => $data->getFd()
+            'fd' => $data->getFd(),
+            'position' => $data->getPosition()
         ]);
     }
 }

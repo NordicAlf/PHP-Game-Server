@@ -5,16 +5,17 @@ namespace ForestServer\DB\Storage;
 
 use Swoole\Table;
 
-class UserStorage implements StorageInterface
+class ItemStorage implements StorageInterface
 {
     private static Table $table;
 
     public static function getTable(): Table
     {
         if (!isset(self::$table)) {
-            self::$table = new Table(1024);
+            self::$table = new Table(1024 * 1024);
             self::$table->column('id', Table::TYPE_STRING, 64);
-            self::$table->column('fd', Table::TYPE_INT, 32);
+            self::$table->column('roomId', Table::TYPE_STRING, 64);
+            self::$table->column('type', Table::TYPE_STRING, 32);
             self::$table->column('position', Table::TYPE_STRING, 256);
             self::$table->create();
 
