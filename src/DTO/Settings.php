@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace ForestServer\DTO;
 
-use ForestServer\Service\Trait\ObjectTrait;
+use ForestServer\Service\Utils\Trait\ObjectTrait;
 
 class Settings implements DTOInterface
 {

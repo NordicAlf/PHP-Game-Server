@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace ForestServer\Tests\Unit\Service;
 
-use ForestServer\Service\Game\Generator\VectorGenerator;
+use ForestServer\Service\Utils\Generator\VectorGenerator;
 use PHPUnit\Framework\TestCase;
 
 class VectorGeneratorTest extends TestCase

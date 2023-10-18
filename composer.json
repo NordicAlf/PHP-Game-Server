@@ -21,7 +21,9 @@
     "swoole/ide-helper": "^5.0",
     "ramsey/uuid": "^4.7",
     "monolog/monolog": "^3.4",
-    "psr/container": "^2.0"
+    "psr/container": "^2.0",
+    "symfony/yaml": "^6.3",
+    "php-di/php-di": "^7.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^10.2",

@@ -15,7 +15,8 @@ class RoomStorage implements StorageInterface
             self::$table = new Table(1024);
             self::$table->column('id', Table::TYPE_STRING, 64);
             self::$table->column('password', Table::TYPE_STRING, 64);
-            self::$table->column('status', Table::TYPE_INT, 1);
+            self::$table->column('roomCreatorUserId', Table::TYPE_STRING, 64);
+            self::$table->column('status', Table::TYPE_STRING, 32);
             self::$table->column('users', Table::TYPE_STRING, 256);
             self::$table->column('items', Table::TYPE_STRING, 1024 * 1024);
             self::$table->create();

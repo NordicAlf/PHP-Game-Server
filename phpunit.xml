@@ -1,0 +1,8 @@
+<phpunit bootstrap="vendor/autoload.php">
+    <php>
+        <server name="DOCUMENT_ROOT" value="/home/alf/Dev/Home/PHP/ForestServer" />
+        <server name="SERVER_NAME" value="localhost" />
+
+        <const name="PHPUNIT_TESTSUITE" value="true"/>
+    </php>
+</phpunit>

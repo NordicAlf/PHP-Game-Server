@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace ForestServer\Service\Trait;
+namespace ForestServer\Service\Utils\Trait;
 
 use ForestServer\Service\Converter\StringService;
 

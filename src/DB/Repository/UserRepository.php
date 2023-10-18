@@ -24,6 +24,19 @@ class UserRepository extends AbstractRepository implements RepositoryInterface
         return null;
     }
 
+    public function removeById(string $id): bool
+    {
+        $user = $this->getById($id);
+
+        if ($user) {
+            UserStorage::getTable()->delete($id);
+
+            return true;
+        }
+
+        return false;
+    }
+
     public function getByFd(int $fd): ?User
     {
         foreach (UserStorage::getTable() as $userRow) {
@@ -43,10 +56,6 @@ class UserRepository extends AbstractRepository implements RepositoryInterface
     {
         foreach (UserStorage::getTable() as $userRow) {
             $users[] = Transform::transformArrayToObject($userRow, User::class);
-//            $users[] = (new User())
-//                ->setId($userRow['id'])
-//                ->setFd($userRow['fd'])
-//                ->setPosition($userRow['position']);
         }
 
         return $users ?? [];

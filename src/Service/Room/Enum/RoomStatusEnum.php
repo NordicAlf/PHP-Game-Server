@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace ForestServer\Service\Room\Enum;
 
-enum RoomStatusEnum: int
+enum RoomStatusEnum: string
 {
-    case Wait = 0;
-    case Run = 1;
+    case Wait = 'wait';
+    case Run = 'run';
+    case Exit = 'exit';
 }

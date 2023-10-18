@@ -7,15 +7,15 @@ use ForestServer\Api\Request\Interface\RequestInterface;
 use ForestServer\Attributes\UseParam;
 use ForestServer\Service\Utils\Trait\ObjectTrait;
 
-class RoomRequest extends AbstractRequest implements RequestInterface
+class RoomUpdateRequest extends AbstractRequest implements RequestInterface
 {
     use ObjectTrait;
 
     #[UseParam]
-    protected string $roomPassword;
+    protected string $roomId;
 
-    public function getPassword(): string
+    public function getRoomId(): string
     {
-        return $this->roomPassword;
+        return $this->roomId;
     }
 }

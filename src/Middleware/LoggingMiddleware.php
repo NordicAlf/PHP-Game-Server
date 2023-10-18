@@ -14,11 +14,11 @@ class LoggingMiddleware implements MiddlewareInterface
 
     public function handle(RequestInterface $request): ?RequestInterface
     {
-        $this->logger->info($request->getType()->value, [
-            'request' => [
-                'data' => $request->toArray()
-            ]
-        ]);
+//        $this->logger->info($request->getAction(), [
+//            'request' => [
+//                'data' => $request->toArray()
+//            ]
+//        ]);
 
         return $request;
     }

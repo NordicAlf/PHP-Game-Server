@@ -3,19 +3,23 @@ declare(strict_types=1);
 
 namespace ForestServer\Game;
 
+use ForestServer\Api\Request\ObjectRequest;
+use ForestServer\Api\Request\PlayerRequest;
 use ForestServer\DB\Entity\Item;
 use ForestServer\DB\Entity\Room;
 use ForestServer\DB\Repository\ItemRepository;
 use ForestServer\DB\Repository\RoomRepository;
-use ForestServer\Service\Game\Enum\ItemTypeEnum;
-use ForestServer\Service\Game\Generator\VectorGenerator;
+use ForestServer\DB\Repository\UserRepository;
+use ForestServer\Service\Utils\Enum\ItemTypeEnum;
+use ForestServer\Service\Utils\Generator\VectorGenerator;
 
 class GameManager
 {
     public function __construct(
         private VectorGenerator $generator,
         private ItemRepository  $itemRepository,
-        private RoomRepository  $roomRepository
+        private RoomRepository  $roomRepository,
+        private UserRepository $userRepository
     ) {}
 
     public function createCakePositions(Room $room): Room
@@ -29,15 +33,7 @@ class GameManager
 
         $positions = $this->generator->generate($countPlates, $minWorld, $maxWorld, 6, $maxWorld, $minWorld, $maxWorld);
 
-//        var_dump('ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ');
-//        var_dump($positions);
-
         foreach ($positions as $vector3) {
-//            dump($vector3);
-//            $res = json_encode($vector3);
-//
-//            dd(json_decode($res));
-
             $object = (new Item())
                 ->setRoomId($room->getId())
                 ->setType(ItemTypeEnum::Cake)
@@ -50,7 +46,31 @@ class GameManager
         $this->roomRepository->save($room);
 
         return $room;
+    }
 
-//        dump($this->itemRepository->getAll());
+    public function removeCake(ObjectRequest $request): void
+    {
+        $room = $this->roomRepository->getById($request->getRoomId());
+
+        $removeItemFromRoomItems = array_filter($room->getItems(), function (Item $item) use ($request) {
+            return $item->getId() !== $request->getObjectId();
+        });
+
+        $room->removeObjects();
+
+        foreach ($removeItemFromRoomItems as $item) {
+            $room->addObject($item);
+        }
+
+        $this->roomRepository->save($room);
+        $this->itemRepository->removeById($request->getObjectId());
+    }
+
+    public function updateUserPosition(PlayerRequest $request): void
+    {
+       $user = $this->userRepository->getById($request->getUserId());
+
+       $user->setPosition(json_encode($request->getPosition()));
+       $this->userRepository->save($user);
     }
 }

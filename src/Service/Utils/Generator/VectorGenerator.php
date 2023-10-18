@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace ForestServer\Service\Game\Generator;
+namespace ForestServer\Service\Utils\Generator;
 
 class VectorGenerator
 {

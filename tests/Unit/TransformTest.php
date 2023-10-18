@@ -9,9 +9,9 @@ use ForestServer\DB\Entity\Room;
 use ForestServer\DB\Entity\User;
 use ForestServer\DB\Repository\ItemRepository;
 use ForestServer\DB\Repository\UserRepository;
-use ForestServer\Service\Game\Enum\ItemTypeEnum;
 use ForestServer\Service\Room\Enum\RoomStatusEnum;
 use ForestServer\Service\Transform\Transform;
+use ForestServer\Service\Utils\Enum\ItemTypeEnum;
 use PHPUnit\Framework\TestCase;
 
 class TransformTest extends TestCase
@@ -30,7 +30,7 @@ class TransformTest extends TestCase
     public function testTransform(): void
     {
         $json = [
-            'roomAction' => 'Create',
+            'action' => 'Create',
             'roomPassword' => '11111',
             'userFd' => '666'
         ];
@@ -57,6 +57,7 @@ class TransformTest extends TestCase
         $array = [
             'id' => '666',
             'password' => '55555',
+            'roomCreatorUserId' => '666',
             'status' => RoomStatusEnum::Wait->value,
             'users' => "[\"{$user->getId()}\",\"{$user2->getId()}\"]",
             'items' => "[\"{$object1->getId()}\",\"{$object2->getId()}\"]"
@@ -64,8 +65,6 @@ class TransformTest extends TestCase
 
         /** @var Room $room $result */
         $room = Transform::transformArrayToObject($array, Room::class);
-
-        dd($room);
 
         $this->assertNotNull($room);
         $this->assertInstanceOf(User::class, $room->getUsers()[0]);

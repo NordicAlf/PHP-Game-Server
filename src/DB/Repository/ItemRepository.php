@@ -25,6 +25,19 @@ class ItemRepository extends AbstractRepository implements RepositoryInterface
         return null;
     }
 
+    public function removeById(string $id): bool
+    {
+        $item = $this->getById($id);
+
+        if ($item) {
+            ItemStorage::getTable()->delete($id);
+
+            return true;
+        }
+
+        return false;
+    }
+
     public function getAll(): array
     {
         foreach (ItemStorage::getTable() as $row) {
