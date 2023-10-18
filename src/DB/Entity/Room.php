@@ -81,8 +81,6 @@ class Room extends AbstractEntity implements EntityInterface
             return $userItem->getId() !== $user->getId();
         });
 
-//        unset($this->users[$user->getId()]);
-
         return $this;
     }
 
