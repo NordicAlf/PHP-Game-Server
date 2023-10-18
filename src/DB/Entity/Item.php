@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace ForestServer\DB\Entity;
 
 use ForestServer\Attributes\UseParam;
-use ForestServer\Service\Game\Enum\ItemTypeEnum;
+use ForestServer\Service\Utils\Enum\ItemTypeEnum;
 use JsonSerializable;
 
 class Item extends AbstractEntity implements EntityInterface, JsonSerializable

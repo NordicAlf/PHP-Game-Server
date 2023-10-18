@@ -10,8 +10,16 @@ abstract class AbstractRequest
     #[UseParam]
     protected string $userFd;
 
+    #[UseParam]
+    protected string $action;
+
     public function getUserFd(): string
     {
         return $this->userFd;
+    }
+
+    public function getAction(): string
+    {
+        return $this->action;
     }
 }

@@ -3,11 +3,9 @@ declare(strict_types=1);
 
 namespace ForestServer\Api\Request\Interface;
 
-use ForestServer\Api\Request\Enum\RequestTypeEnum;
-
 interface RequestInterface
 {
-    public function getType(): RequestTypeEnum;
+    public function getAction(): string;
     public function getUserFd(): string;
     public function toArray(): array;
 }

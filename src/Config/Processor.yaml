@@ -1,0 +1,8 @@
+strategies:
+  room_create: 'ForestServer\Service\Game\Strategy\RoomCreate'
+  room_join: 'ForestServer\Service\Game\Strategy\RoomJoin'
+  room_run: 'ForestServer\Service\Game\Strategy\RoomRun'
+  room_exit: 'ForestServer\Service\Game\Strategy\RoomExit'
+  player_position_update: 'ForestServer\Service\Game\Strategy\PlayerPositionUpdate'
+  object_update: 'ForestServer\Service\Game\Strategy\ObjectUpdate'
+  object_remove: 'ForestServer\Service\Game\Strategy\ObjectRemove'

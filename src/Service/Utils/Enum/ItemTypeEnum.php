@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace ForestServer\Service\Game\Enum;
+namespace ForestServer\Service\Utils\Enum;
 
 enum ItemTypeEnum: string
 {

@@ -45,8 +45,8 @@ class Transform
         return $objectClass;
     }
 
-    private static function getValueFromData(array $data, string $key): string|int
+    private static function getValueFromData(array $data, string $key): string|int|array
     {
-        return $data[$key] ?? throw new Exception("Property '$key' from your array not found in class");
+        return $data[$key] ?? throw new Exception("Property '$key' from your class not found in data");
     }
 }

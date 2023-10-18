@@ -24,6 +24,19 @@ class RoomRepository extends AbstractRepository implements RepositoryInterface
         return null;
     }
 
+    public function removeById(string $id): bool
+    {
+        $room = $this->getById($id);
+
+        if ($room) {
+            RoomStorage::getTable()->delete($id);
+
+            return true;
+        }
+
+        return false;
+    }
+
     public function getByPassword(string $pass): ?Room
     {
         foreach (RoomStorage::getTable() as $roomRow) {
@@ -61,6 +74,8 @@ class RoomRepository extends AbstractRepository implements RepositoryInterface
         RoomStorage::getTable()->set($data->getId(), [
             'id' => $data->getId(),
             'password' => $data->getPassword(),
+            'roomCreatorUserId' => $data->getRoomCreatorUserId(),
+            'status'=> $data->getStatus(),
             'users' => json_encode($userIds ?? []),
             'items' => json_encode($itemIds ?? [])
         ]);

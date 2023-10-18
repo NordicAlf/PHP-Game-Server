@@ -4,25 +4,19 @@ declare(strict_types=1);
 namespace ForestServer;
 
 use Closure;
+use DI\Container;
 use Exception;
-use ForestServer\Api\Request\Enum\ResponseStatusEnum;
-use ForestServer\Api\Request\Enum\ResponseTypeEnum;
-use ForestServer\Api\Request\Enum\RoomActionEnum;
 use ForestServer\Api\Request\Factory\RequestFactory;
-use ForestServer\DB\Entity\Room;
-use ForestServer\DB\Repository\ItemRepository;
-use ForestServer\DB\Repository\RoomRepository;
 use ForestServer\DTO\Settings;
-use ForestServer\Game\GameManager;
 use ForestServer\Middleware\AuthMiddleware;
 use ForestServer\Middleware\LoggingMiddleware;
 use ForestServer\Middleware\MiddlewarePipeline;
 use ForestServer\Service\Auth\AuthService;
-use ForestServer\Service\Container\Container;
-use ForestServer\Service\Game\Generator\VectorGenerator;
-use ForestServer\Service\Room\RoomService;
+use ForestServer\Service\Container\ServiceContainer;
+use ForestServer\Service\Game\GameProcessor;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use ResponseStatusEnum;
 use Swoole\Http\Request as SwooleRequest;
 use Swoole\Server\Port;
 use Swoole\WebSocket\Frame;
@@ -30,13 +24,9 @@ use Swoole\WebSocket\Server;
 
 class ServerManager
 {
-    protected Server $server;
-    protected Settings $settings;
-    protected MiddlewarePipeline $middleware;
-    protected RoomService $roomManager;
-    protected static Container $container;
-    protected RoomRepository $roomRepository;
-    protected GameManager $gameManager;
+    private Server $server;
+    private MiddlewarePipeline $middleware;
+    private GameProcessor $gameProcessor;
 
     /* @var Port[] $users */
     protected array $ports = [];
@@ -46,14 +36,7 @@ class ServerManager
         private readonly int $port,
         ?Settings $settings = null,
     ) {
-        $this->roomRepository = new RoomRepository();
-        $this->roomManager = new RoomService();
-        $this->gameManager = new GameManager(new VectorGenerator(), new ItemRepository(), $this->roomRepository);
-//        static::$container = new Container();
-
-//        static::$container->set(RoomService::class, function (Container $c) {
-//            return new RoomService();
-//        });
+        ServiceContainer::set(new Container());
 
         $this->middleware = new MiddlewarePipeline([
             new LoggingMiddleware(new Logger('main', [new StreamHandler('php://stdout')])),
@@ -70,6 +53,8 @@ class ServerManager
         $this->server->on('message', $this->onMessage($port));
         $this->server->on('close', $this->onClose($port));
         $this->server->on('disconnect', $this->onClose($port));
+
+        $this->gameProcessor = new GameProcessor($this->server);
     }
 
     public function createPort(int $port): self
@@ -115,50 +100,15 @@ class ServerManager
 
                 $this->middleware->handle($request);
 
-                if ($request->getAction() === RoomActionEnum::Create->value) {
-                    $room = $this->roomManager->create($request);
-
-                    $room = $this->gameManager->createCakePositions($room);
-
-                    $server->push($frame->fd, json_encode([
-                        'status' => ResponseStatusEnum::Success->value,
-                        'type' => ResponseTypeEnum::Positions->value,
-                        'data' => [
-                            'platePositions' => []
-                        ]
-                    ]));
-                }
-
-                if ($request->getAction() === RoomActionEnum::Join->value) {
-                    //создать позицую игрока для нового юзера
-
-                    $this->roomManager->join($request);
-                }
-
-//                var_dump($this->roomRepository->getAll());
+                $this->gameProcessor->process($request);
             } catch (Exception $exception) {
                 var_dump($exception->getMessage());
 
                 $server->push($frame->fd, json_encode([
                     'status' => ResponseStatusEnum::Error->value,
+                    'action' => $request->getAction(),
                     'data' => $exception->getMessage()
                 ]));
-            }
-
-            if ($server->isEstablished($frame->fd)) {
-                /** @var Room $room */
-                foreach ($this->roomRepository->getAll() as $room) {
-                    dump(json_encode($room->getUsers()[0]));
-
-                    $server->push($frame->fd, json_encode([
-                        'status' => ResponseStatusEnum::Success->value,
-                        'type' => ResponseTypeEnum::DataChannel->value,
-                        'data' => [
-                            'cakes' => $room->getItems(),
-                            'users' => $room->getUsers()
-                        ]
-                    ]));
-                }
             }
         };
     }
@@ -166,7 +116,7 @@ class ServerManager
     public function onClose(int $port): Closure
     {
         return function (Server $server, int $fd) use ($port) {
-//            unset($this->users[$fd]);
+            // TODO Сделать удаление пользователя из базы при дисконнекте
 
             echo "Client $fd :CLOSE to port: $port\n";
         };
