@@ -8,7 +8,7 @@ use ForestServer\Api\Request\Interface\RequestInterface;
 use ForestServer\DB\Repository\RoomRepository;
 use ForestServer\Game\GameManager;
 use ForestServer\Service\Game\GameStrategyInterface;
-use ResponseStatusEnum;
+use ForestServer\Api\Response\Enum\ResponseStatusEnum;
 use Swoole\WebSocket\Server;
 
 class ObjectRemove implements GameStrategyInterface

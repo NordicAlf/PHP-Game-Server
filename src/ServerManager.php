@@ -16,7 +16,7 @@ use ForestServer\Service\Container\ServiceContainer;
 use ForestServer\Service\Game\GameProcessor;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use ResponseStatusEnum;
+use ForestServer\Api\Response\Enum\ResponseStatusEnum;
 use Swoole\Http\Request as SwooleRequest;
 use Swoole\Server\Port;
 use Swoole\WebSocket\Frame;

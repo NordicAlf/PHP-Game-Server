@@ -9,7 +9,7 @@ use ForestServer\DB\Repository\RoomRepository;
 use ForestServer\DB\Repository\UserRepository;
 use ForestServer\Service\Game\GameStrategyInterface;
 use ForestServer\Service\Room\RoomService;
-use ResponseStatusEnum;
+use ForestServer\Api\Response\Enum\ResponseStatusEnum;
 use Swoole\WebSocket\Server;
 
 class RoomExit implements GameStrategyInterface

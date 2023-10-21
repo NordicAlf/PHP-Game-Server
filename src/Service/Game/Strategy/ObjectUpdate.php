@@ -7,7 +7,7 @@ use ForestServer\Api\Request\Enum\RequestActionEnum;
 use ForestServer\Api\Request\Interface\RequestInterface;
 use ForestServer\DB\Repository\RoomRepository;
 use ForestServer\Service\Game\GameStrategyInterface;
-use ResponseStatusEnum;
+use ForestServer\Api\Response\Enum\ResponseStatusEnum;
 use Swoole\WebSocket\Server;
 
 class ObjectUpdate implements GameStrategyInterface
