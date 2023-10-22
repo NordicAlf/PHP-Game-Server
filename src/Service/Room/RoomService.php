@@ -25,6 +25,10 @@ class RoomService
 
     public function create(RoomRequest $request): Room
     {
+        $allRooms = $this->roomRepository->getAll();
+
+        var_dump($allRooms);
+
         $user = $this->userRepository->getByFd((int)$request->getUserFd());
         if (!$user) {
             throw new UserNotFoundException((int)$request->getUserFd());
