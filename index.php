@@ -5,5 +5,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use ForestServer\DTO\Settings;
 use ForestServer\ServerManager;
 
+var_dump($_SERVER);
+
 $serverClient = new ServerManager('127.0.0.1', 8000, (new Settings())->setHooks());
 $serverClient->startServer();
