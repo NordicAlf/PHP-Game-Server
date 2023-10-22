@@ -7,5 +7,5 @@ use ForestServer\ServerManager;
 
 var_dump($_SERVER);
 
-$serverClient = new ServerManager('localhost', $_SERVER['PORT'] ? (int)$_SERVER['PORT'] : 8000 , (new Settings())->setHooks());
+$serverClient = new ServerManager('0.0.0.0', $_SERVER['PORT'] ? (int)$_SERVER['PORT'] : 8000 , (new Settings())->setHooks());
 $serverClient->startServer();
