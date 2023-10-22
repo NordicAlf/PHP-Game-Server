@@ -49,6 +49,10 @@ class RoomService
         $user = $this->userRepository->getByFd((int)$request->getUserFd());
         $room = $this->roomRepository->getByPassword($request->getPassword());
 
+        $allRooms = $this->roomRepository->getAll();
+
+        var_dump($allRooms);
+
         if (!$user) {
             throw new UserNotFoundException((int)$request->getUserFd());
         }
