@@ -25,9 +25,11 @@ class RoomService
 
     public function create(RoomRequest $request): Room
     {
-        $allRooms = $this->roomRepository->getAll();
+        foreach ($this->roomRepository->getAll() as $room) {
+            $roomsIds[] = $room->getId();
+        }
 
-        var_dump($allRooms);
+        var_dump($roomsIds ?? []);
 
         $user = $this->userRepository->getByFd((int)$request->getUserFd());
         if (!$user) {
@@ -53,9 +55,11 @@ class RoomService
         $user = $this->userRepository->getByFd((int)$request->getUserFd());
         $room = $this->roomRepository->getByPassword($request->getPassword());
 
-        $allRooms = $this->roomRepository->getAll();
+        foreach ($this->roomRepository->getAll() as $room) {
+            $roomsIds[] = $room->getId();
+        }
 
-        var_dump($allRooms);
+        var_dump($roomsIds ?? []);
 
         if (!$user) {
             throw new UserNotFoundException((int)$request->getUserFd());
