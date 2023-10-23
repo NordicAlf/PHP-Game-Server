@@ -34,7 +34,7 @@ class ServerManager
     public function __construct(
         private readonly string $host,
         private readonly int $port,
-        ?Settings $settings = null,
+        Settings $settings,
     ) {
         ServiceContainer::set(new Container());
 
@@ -43,11 +43,13 @@ class ServerManager
             new AuthMiddleware(new AuthService())
         ]);
 
-        $this->server = new Server($this->host, $this->port);
-
-        if ($settings) {
-            $this->server->set($settings->toArray());
+        if ($settings->isSsl()) {
+            $this->server = new Server($this->host, $this->port, SWOOLE_BASE, SWOOLE_SOCK_TCP | SWOOLE_SSL);
+        } else {
+            $this->server = new Server($this->host, $this->port);
         }
+
+        $this->server->set($settings->toArray());
 
         $this->server->on('open', $this->onOpen($port));
         $this->server->on('message', $this->onMessage($port));

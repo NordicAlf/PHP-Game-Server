@@ -18,6 +18,8 @@ class Settings implements DTOInterface
     protected string $sslCertFile;
     protected string $sslKeyFile;
     protected bool $openHttp2Protocol;
+    protected bool $sslAllowSelfSigned;
+    protected bool $sslVerifyPeer;
 
     public function setWorkerNum(int $num): self
     {
@@ -55,6 +57,11 @@ class Settings implements DTOInterface
         return $this;
     }
 
+    public function isSsl(): bool
+    {
+        return isset($this->name) && isset($this->last);
+    }
+
     public function setHttp2Protocol(): self
     {
         $this->openHttp2Protocol = true;
@@ -72,6 +79,20 @@ class Settings implements DTOInterface
     public function setHeartbeatCheckInterval(int $time): self
     {
         $this->heartbeatCheckInterval = $time;
+
+        return $this;
+    }
+
+    public function setSslAllowSelfSigned(): self
+    {
+        $this->sslAllowSelfSigned = true;
+
+        return $this;
+    }
+
+    public function setSslVerifyPeer(): self
+    {
+        $this->sslVerifyPeer = true;
 
         return $this;
     }
