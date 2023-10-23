@@ -12,6 +12,8 @@ class Settings implements DTOInterface
     protected int $workerNum;
     protected int $taskWorkerNum;
     protected int $hookFlags;
+    protected int $heartbeatIdleTime;
+    protected int $heartbeatCheckInterval;
     protected string $logFile;
     protected string $sslCertFile;
     protected string $sslKeyFile;
@@ -56,6 +58,20 @@ class Settings implements DTOInterface
     public function setHttp2Protocol(): self
     {
         $this->openHttp2Protocol = true;
+
+        return $this;
+    }
+
+    public function setHeartbeatIdleTime(int $time): self
+    {
+        $this->heartbeatIdleTime = $time;
+
+        return $this;
+    }
+
+    public function setHeartbeatCheckInterval(int $time): self
+    {
+        $this->heartbeatCheckInterval = $time;
 
         return $this;
     }

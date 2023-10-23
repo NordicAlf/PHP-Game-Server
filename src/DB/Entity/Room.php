@@ -15,7 +15,7 @@ class Room extends AbstractEntity implements EntityInterface
     protected string $password;
 
     #[UseParam]
-    protected string $status = RoomStatusEnum::Wait->value;
+    protected string $status = 'wait';
 
     #[UseParam]
     protected string $roomCreatorUserId;
