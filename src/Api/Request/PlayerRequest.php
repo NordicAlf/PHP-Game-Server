@@ -20,6 +20,9 @@ class PlayerRequest extends AbstractRequest implements RequestInterface
     #[UseParam]
     protected array $position;
 
+    #[UseParam]
+    protected array $rotation;
+
     public function getRoomId(): string
     {
         return $this->roomId;
@@ -33,5 +36,10 @@ class PlayerRequest extends AbstractRequest implements RequestInterface
     public function getPosition(): array
     {
         return $this->position;
+    }
+
+    public function getRotation(): array
+    {
+        return $this->rotation;
     }
 }

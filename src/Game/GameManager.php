@@ -66,11 +66,13 @@ class GameManager
         $this->itemRepository->removeById($request->getObjectId());
     }
 
-    public function updateUserPosition(PlayerRequest $request): void
+    public function updateUserData(PlayerRequest $request): void
     {
        $user = $this->userRepository->getById($request->getUserId());
 
        $user->setPosition(json_encode($request->getPosition()));
+       $user->setRotation(json_encode($request->getRotation()));
+
        $this->userRepository->save($user);
     }
 }
