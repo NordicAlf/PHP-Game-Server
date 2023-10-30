@@ -20,14 +20,15 @@ class PlayerPositionUpdate implements GameStrategyInterface
 
     public function process(Server $server, RequestInterface $request): void
     {
-        $this->gameManager->updateUserPosition($request);
+        $this->gameManager->updateUserData($request);
 
         $room = $this->roomRepository->getById($request->getRoomId());
 
-        $userPositions = [];
+        $userData = [];
 
         foreach ($room->getUsers() as $user) {
-            $userPositions[$user->getId()] = json_decode($user->getPosition());
+            $userData[$user->getId()]['position'] = json_decode($user->getPosition());
+            $userData[$user->getId()]['rotation'] = json_decode($user->getRotation());
         }
 
         foreach ($room->getUsers() as $user) {
@@ -36,7 +37,7 @@ class PlayerPositionUpdate implements GameStrategyInterface
                     'status' => ResponseStatusEnum::Success->value,
                     'action' => RequestActionEnum::PlayerPositionUpdate->value,
                     'data' => [
-                        'users' => $userPositions
+                        'users' => $userData
                     ]
                 ]));
             }

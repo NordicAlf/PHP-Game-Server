@@ -16,6 +16,7 @@ class UserStorage implements StorageInterface
             self::$table->column('id', Table::TYPE_STRING, 64);
             self::$table->column('fd', Table::TYPE_INT, 32);
             self::$table->column('position', Table::TYPE_STRING, 256);
+            self::$table->column('rotation', Table::TYPE_STRING, 256);
             self::$table->create();
 
             return self::$table;

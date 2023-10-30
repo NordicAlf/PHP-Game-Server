@@ -44,6 +44,7 @@ class RoomService
         ;
 
         $user->setPosition(json_encode(['x' => 25, 'y' => 5, 'z' => 0]));
+        $user->setRotation(json_encode(['x' => 0, 'y' => 0, 'z' => 0]));
 
         $this->roomRepository->save($room);
         $this->userRepository->save($user);
@@ -69,6 +70,7 @@ class RoomService
 
         $room->addUser($user);
         $user->setPosition(json_encode(['x' => 25, 'y' => 5, 'z' => 0]));
+        $user->setRotation(json_encode(['x' => 0, 'y' => 0, 'z' => 0]));
 
         $this->roomRepository->save($room);
         $this->userRepository->save($user);

@@ -102,7 +102,9 @@ class ServerManager
 
                 $this->middleware->handle($request);
 
-                $this->gameProcessor->process($request);
+                go(function () use ($request) {
+                    $this->gameProcessor->process($request);
+                });
             } catch (Exception $exception) {
                 var_dump($exception->getMessage());
 

@@ -14,6 +14,9 @@ class User extends AbstractEntity implements EntityInterface, JsonSerializable
     #[UseParam]
     protected string $position = '';
 
+    #[UseParam]
+    protected string $rotation = '';
+
     public function getFd(): int
     {
         return $this->fd;
@@ -38,11 +41,24 @@ class User extends AbstractEntity implements EntityInterface, JsonSerializable
         return $this;
     }
 
+    public function getRotation(): string
+    {
+        return $this->rotation;
+    }
+
+    public function setRotation(string $rotation): self
+    {
+        $this->rotation = $rotation;
+
+        return $this;
+    }
+
     public function jsonSerialize(): array
     {
         return [
             'id' => $this->id,
-            'position' => json_decode($this->position)
+            'position' => json_decode($this->position),
+            'rotation' => json_decode($this->rotation)
         ];
     }
 }

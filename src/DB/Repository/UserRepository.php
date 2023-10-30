@@ -67,7 +67,8 @@ class UserRepository extends AbstractRepository implements RepositoryInterface
         UserStorage::getTable()->set($data->getId(), [
             'id' => $data->getId(),
             'fd' => $data->getFd(),
-            'position' => $data->getPosition()
+            'position' => $data->getPosition(),
+            'rotation' => $data->getRotation()
         ]);
     }
 }
