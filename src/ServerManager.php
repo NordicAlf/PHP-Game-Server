@@ -97,23 +97,22 @@ class ServerManager
     public function onMessage(int $port): Closure
     {
         return function (Server $server, Frame $frame) use ($port) {
-            try {
-                $request = RequestFactory::createRequest($frame);
+            go(function () use ($server, $frame) {
+                try {
+                    $request = RequestFactory::createRequest($frame);
 
-                $this->middleware->handle($request);
+                    $this->middleware->handle($request);
 
-                go(function () use ($request) {
                     $this->gameProcessor->process($request);
-                });
-            } catch (Exception $exception) {
-                var_dump($exception->getMessage());
+                } catch (Exception $exception) {
+                    var_dump($exception->getMessage());
 
-                $server->push($frame->fd, json_encode([
-                    'status' => ResponseStatusEnum::Error->value,
-                    'action' => $request->getAction(),
-                    'data' => $exception->getMessage()
-                ]));
-            }
+                    $server->push($frame->fd, json_encode([
+                        'status' => ResponseStatusEnum::Error->value,
+                        'data' => $exception->getMessage()
+                    ]));
+                }
+            });
         };
     }
 

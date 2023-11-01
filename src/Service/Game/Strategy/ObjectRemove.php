@@ -23,13 +23,17 @@ class ObjectRemove implements GameStrategyInterface
         $this->gameManager->removeCake($request);
         $room = $this->roomRepository->getById($request->getRoomId());
 
-        $server->push((int)$request->getUserFd(), json_encode([
-            'status' => ResponseStatusEnum::Success->value,
-            'action' => RequestActionEnum::ObjectRemove->value,
-            'data' => [
-                'cakes' => $room->getItems()
-            ]
-        ]));
+        foreach ($room->getUsers() as $user) {
+            if ($server->isEstablished($user->getFd())) {
+                $server->push($user->getFd(), json_encode([
+                    'status' => ResponseStatusEnum::Success->value,
+                    'action' => RequestActionEnum::ObjectRemove->value,
+                    'data' => [
+                        'cakes' => $room->getItems()
+                    ]
+                ]));
+            }
+        }
     }
 
     public function getType(): RequestActionEnum
