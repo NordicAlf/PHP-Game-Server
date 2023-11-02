@@ -12,4 +12,4 @@ Future features
 ------------
 ↟ Separate game-specific logic from the server and create a library
 
-![Image alt](https://github.com/NordicAlf/PHP-Game-Server/blob/master/screen.png)
+![Image alt](https://github.com/NordicAlf/PHP-Game-Server/blob/master/Screen.png)
