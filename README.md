@@ -2,6 +2,9 @@
 <img src="https://github.com/blackcater/blackcater/raw/main/images/Hi.gif" height="32"/></h1>
 
 **Link to game:** https://nordicalf.github.io/SweetCats/ <br>
+
+![Image alt](https://github.com/NordicAlf/PHP-Game-Server/blob/master/Screen.png)
+
 **Link to frontend part:** https://github.com/NordicAlf/SweetCats
 
 Stack: 
@@ -11,5 +14,3 @@ Stack:
 Future features
 ------------
 ↟ Separate game-specific logic from the server and create a library
-
-![Image alt](https://github.com/NordicAlf/PHP-Game-Server/blob/master/Screen.png)
