@@ -12,7 +12,7 @@ class ItemStorage implements StorageInterface
     public static function getTable(): Table
     {
         if (!isset(self::$table)) {
-            self::$table = new Table(1024 * 1024);
+            self::$table = new Table(10000);
             self::$table->column('id', Table::TYPE_STRING, 64);
             self::$table->column('roomId', Table::TYPE_STRING, 64);
             self::$table->column('type', Table::TYPE_STRING, 32);
