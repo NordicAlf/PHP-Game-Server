@@ -3,7 +3,7 @@
 
 ![Image alt](https://github.com/NordicAlf/PHP-Game-Server/blob/master/Screen.png)
 
-**Link to frontend part:** https://github.com/NordicAlf/SweetCats
+**Link to frontend part:** https://github.com/NordicAlf/SweetCats <br>
 **Link to game:** https://nordicalf.github.io/SweetCats/ <br>
 
 Stack: 
